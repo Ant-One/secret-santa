@@ -26,3 +26,8 @@ pre {
     display: flex;
     justify-content: space-between;
 }
+
+.name-field {
+    display: flex;
+    justify-content: start;
+}

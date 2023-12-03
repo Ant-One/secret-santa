@@ -5,3 +5,6 @@ from django.template import loader
 
 def index(request):
     return render(request, "index.html")
+
+def new_draw(request):
+    return render(request, "new_draw.html")
