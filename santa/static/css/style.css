@@ -19,15 +19,25 @@ pre {
 }
 
 #names-fields {
+    margin-top: 2em;
     margin-bottom: 2em;
 }
 
 .buttons-form {
     display: flex;
     justify-content: space-between;
+    margin-bottom: 4em;
 }
 
 .name-field {
     display: flex;
     justify-content: start;
+}
+
+#draw-name-form {
+    margin-top: 2em;
+}
+
+#title {
+    margin-bottom: 1em;
 }

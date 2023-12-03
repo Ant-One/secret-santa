@@ -54,22 +54,24 @@
     </head>
     <body>
         <header>
-            <h1>Create a new draw</h1>
+            <h1>Edit draw</h1>
         </header>
-        <form method="post" action="/draw/create" id="names-form">
+        <form method="post" action="/draw/{{draw_pk}}/edit" id="names-form">
             {% csrf_token %}
             <div class="mb-3" id="draw-name-form">
                 <label for="draw-label" class="form-label">How should we name this draw?</label>
                 <div class="dram-name">
-                    <input type="text" class="form-control" name="draw-name" required="required">
+                    <input type="text" class="form-control" name="draw-name" required="required" value="{{draw_name}}">
                 </div> 
             <div id="names-fields">
+                {% for participant in participants %}
                 <div class="mb-3">
                     <label for="name-0" class="form-label">Name</label>
                     <div class="name-field">
-                        <input type="text" class="form-control" name="names" required="required">
+                        <input type="text" class="form-control" name="names" required="required" value="{{participant.name}}">
                     </div> 
                 </div>
+                {% endfor %}
             </div>
             <div class="buttons-form">
                 <button onclick="addLine()" class="btn btn-success" type="button">Add participant</button>
