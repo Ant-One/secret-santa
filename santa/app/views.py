@@ -136,6 +136,7 @@ def show_pairing(request, draw_id, pairing_id):
         "draw_name": draw.draw_name,
         "gifter_name": pairing.gifter.name,
         "giftee_name": pairing.giftee.name,
+        "details_link": f"/draw/{draw.id}",
     }
 
     return render(request, "pairing_result.html", context)
