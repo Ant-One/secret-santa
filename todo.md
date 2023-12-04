@@ -4,6 +4,7 @@
 - new footer
 - Count of participants
 - delete in edit
+- Copy share link
 
 # Models
 - Participant
@@ -22,5 +23,15 @@
 # Migrations
 - Clean Migrations
 
-#Prod
+# Prod
 - Real DB?
+- Centralize footer and header
+
+# Functionality
+- Can make a draw
+- Can see again the drawn name
+- Can redo draw ?
+- Better share link
+
+# Draw
+- Perfect matching algorithm

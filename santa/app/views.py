@@ -2,7 +2,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.template import loader
 from django.http import HttpResponse
 
-from .models import Draw, Participant
+from .models import Draw, Participant, Pairing
+
+from random import choice
 
 # Create your views here.
 
@@ -44,8 +46,12 @@ def draw_edit(request, draw_id):
         draw_name = request.POST.get("draw-name")
         names = request.POST.getlist("names")
 
+        if draw.is_drawn:
+            return HttpResponse("HTTP 403 - Forbidden, already drawn", status=403)
+
         if draw_name:
             draw.draw_name = draw_name
+            draw.save()
         if names:
             draw.participants.all().delete()
             for name in names:
@@ -57,7 +63,71 @@ def draw_edit(request, draw_id):
     context = {
         "draw_name": draw.draw_name,
         "draw_pk": draw_id,
+        "is_drawn": draw.is_drawn,
         "participants": draw.participants.all(),
     }
 
     return render(request, "draw_edit.html", context)
+
+def share_link(request, draw_id):
+    draw = get_object_or_404(Draw, pk=draw_id)
+
+    context = {
+        "draw_name": draw.draw_name,
+        "draw_pk": draw_id,
+    }
+
+    return render(request, "share_link.html", context)
+
+def do_draw(request, draw_id):
+    draw = get_object_or_404(Draw, pk=draw_id)
+
+    context = {
+        "draw_name": draw.draw_name,
+        "draw_pk": draw_id,
+        "participants": draw.participants.all(),
+    }
+
+    return render(request, "do_draw.html", context)
+
+def participant_draw(request, draw_id, participant_id):
+    draw = get_object_or_404(Draw, pk=draw_id)
+    participant_1= get_object_or_404(Participant, pk=participant_id)
+
+    if participant_1.in_draw.id != draw.id:
+        return HttpResponse("HTTP 400 - Bad Request", status=400)
+    
+    if not draw.is_drawn:
+        draw.is_drawn = True
+        draw.save()
+
+    if participant_1.has_drawn:
+        pairing = participant_1.to_gift
+        return redirect("show_pairing", draw_id = draw.id, pairing_id = pairing.id)
+
+    not_drawn_participants_pks = draw.participants.filter(was_drawn=False).values_list("pk", flat=True)
+    participant_2 = Participant.objects.get(pk=choice(not_drawn_participants_pks))
+
+    pairing = Pairing(gifter=participant_1, giftee=participant_2, draw=draw)
+    pairing.save()
+
+    participant_1.to_gift = pairing
+    participant_1.has_drawn = True
+    participant_1.save()
+
+    participant_2.was_drawn = True
+    participant_2.save()
+    
+    return redirect("show_pairing", draw_id = draw.id, pairing_id = pairing.id)
+
+def show_pairing(request, draw_id, pairing_id):
+    draw = get_object_or_404(Draw, pk=draw_id)
+    pairing = get_object_or_404(Pairing, pk=pairing_id)
+
+    context = {
+        "draw_name": draw.draw_name,
+        "gifter_name": pairing.gifter.name,
+        "giftee_name": pairing.giftee.name,
+    }
+
+    return render(request, "pairing_result.html", context)

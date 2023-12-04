@@ -11,29 +11,22 @@
 
     <body>
         <header>
-            <h1 id="title"><strong>{{ draw_name }}</strong></h1>
+            <h1 id="title"><strong>{{draw_name}}</strong></h1>
         </header>
 
-        <h4>Participants</h4>
-        <ul class="list-group">
-            {% for participant in participants %}
-                <li class="list-group-item">{{ participant.name }}</li>
-            {% endfor %}
-        </ul>
-        {% if not is_drawn %}
-            <form action="edit" id="participants-details">
-                <button type="submit" class="btn btn-warning">Edit</button>
-            </form>
-        {% endif %}
+        <h4>Share this link with your friends</h4>
+        <a id="share-link" href="{{ request.path }}">{{ request.build_absolute_uri }}</a>
 
-        <p>If it's all correct you can proceed to the draw. You'll recieve the link to share it with your friends in the next step.</p>
-        <form action="do_draw">
+        <div class="p-3 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3">
+            Bookmark this link, as it will not been shown again!
+        </div>
+
+        <form id="draw-button" action="do_draw">
             <button type="submit" class="btn btn-danger submit">Let's Draw!</button>
         </form>
-        
-
+    
         <footer>
-            <p>Made by <a href="https://ant-one.ch">Antoine</a> in IR90</p>
+            <p>Made by <a href="https://ant-one.ch">Antoine</a> in IR90 1722 near Martigny</p>
             <p><a href="https://github.com/Ant-One/secret-santa">Fork me on Github!</a></p>
         </footer>
     </body>
