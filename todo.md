@@ -5,6 +5,7 @@
 - Count of participants
 - delete in edit
 - Copy share link
+- Blank name validation
 
 # Models
 - Participant
