@@ -26,11 +26,26 @@
             </form>
         {% endif %}
 
-        <p>If it's all correct you can proceed to the draw. You'll recieve the link to share it with your friends in the next step.</p>
-        <form action="do_draw">
-            <button type="submit" class="btn btn-danger submit">Let's Draw!</button>
-        </form>
-        
+        {% if participants|length >= 2 %}
+
+            <p>If it's all correct you can proceed to the draw. You'll recieve the link to share it with your friends in the next step.</p>
+
+            {% if not is_drawn %}
+                <div class="p-3 text-danger-emphasis bg-danger-subtle border border-danger-subtle rounded-3 mt-1 mb-4">
+                    Beware, you will not be able to add or remove participant if you launch the draw.
+                </div>
+            {% endif %}
+            
+            <form action="do_draw">
+                <button type="submit" class="btn btn-danger submit">Let's Draw!</button>
+            </form>
+
+        {% else %}
+            <div class="p-3 text-danger-emphasis bg-danger-subtle border border-danger-subtle rounded-3 mt-1 mb-4">
+                You need more than one person to start the draw.
+            </div>
+        {% endif %}
+
 
         <footer>
             <p>Made by <a href="https://ant-one.ch">Antoine</a> in IR90</p>
