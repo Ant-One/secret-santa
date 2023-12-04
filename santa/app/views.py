@@ -36,6 +36,7 @@ def draw_details(request, draw_id):
     context = {
         "draw_name": draw.draw_name,
         "participants": draw.participants.all(),
+        "is_drawn": draw.is_drawn,
     }
 
     return render(request, "draw_details.html", context)
@@ -63,7 +64,6 @@ def draw_edit(request, draw_id):
     context = {
         "draw_name": draw.draw_name,
         "draw_pk": draw_id,
-        "is_drawn": draw.is_drawn,
         "participants": draw.participants.all(),
     }
 

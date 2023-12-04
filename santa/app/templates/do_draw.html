@@ -43,7 +43,7 @@
         <p>Choose <strong>your name</strong>.</p>
         <div class="list-group">
             {% for participant in participants %}
-            <button type="button" class="list-group-item list-group-item-action {% if participant.has_drawn %} disabled {% endif %}" data-bs-toggle="modal" data-bs-target="#modal-{{ participant.id }}">
+            <button type="button" class="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#modal-{{ participant.id }}">
                 {{ participant.name }}
             </button>
             {% endfor %}

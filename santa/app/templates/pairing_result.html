@@ -11,20 +11,19 @@
 
     <body>
         <header>
-            <h1 id="title"><strong>{{draw_name}}</strong></h1>
+            <h1 id="title"><strong>{{ draw_name }}</strong></h1>
         </header>
 
-        <h4>Your giftee</h4>
+        <h5>It's Christmas time!</h5>
 
-        <p>You, <em>{{ gifter_name }}</em> have to offer</p>
+        <p>You, <em>{{ gifter_name }}</em> have to offer a present to</p>
 
-        <h4><strong>{{ giftee_name}} </strong></h4>
+        <h1>{{ giftee_name}}</h1>
 
-        <p>a present.</p>
-
-        <h6>You can come back to this page at anytime, so bookmark it!  </h6>
-        <a id="share-link" href="{{ request.path }}">{{ request.build_absolute_uri }}</a>
-
+        <div id="share-link"> 
+            <h6>You can come back to this page at anytime, so bookmark it!  </h6>
+            <a href="{{ request.path }}">{{ request.build_absolute_uri }}</a>
+        </div>
         <footer>
             <p>Made by <a href="https://ant-one.ch">Antoine</a> in IR90</p>
             <p><a href="https://github.com/Ant-One/secret-santa">Fork me on Github!</a></p>

@@ -32,6 +32,7 @@
 - Can see again the drawn name
 - Can redo draw ?
 - Better share link
+- Little message to participants
 
 # Draw
 - Perfect matching algorithm
