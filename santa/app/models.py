@@ -13,5 +13,3 @@ class Participant(models.Model):
     in_draw = models.ForeignKey("Draw", on_delete=models.CASCADE, null=True, related_name="participants")
     name = models.TextField(blank=False)
     to_gift = models.ForeignKey("Pairing",on_delete=models.SET_NULL, null=True)
-    has_drawn = models.BooleanField(default=False)
-    was_drawn = models.BooleanField(default=False)

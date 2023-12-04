@@ -4,7 +4,7 @@ from django.http import HttpResponse
 
 from .models import Draw, Participant, Pairing
 
-from random import choice
+from random import choice, shuffle
 
 # Create your views here.
 
@@ -95,33 +95,38 @@ def do_draw(request, draw_id):
 
 def participant_draw(request, draw_id, participant_id):
     draw = get_object_or_404(Draw, pk=draw_id)
-    participant_1= get_object_or_404(Participant, pk=participant_id)
+    participant = get_object_or_404(Participant, pk=participant_id)
 
-    if participant_1.in_draw.id != draw.id:
+    if participant.in_draw.id != draw.id:
         return HttpResponse("HTTP 400 - Bad Request", status=400)
     
     if not draw.is_drawn:
+        _do_draw(draw)
+
+    participant = get_object_or_404(Participant, pk=participant_id)
+    pairing = participant.to_gift
+    
+    return redirect("show_pairing", draw_id = draw.id, pairing_id = pairing.id)
+
+def _do_draw(draw):
         draw.is_drawn = True
         draw.save()
 
-    if participant_1.has_drawn:
-        pairing = participant_1.to_gift
-        return redirect("show_pairing", draw_id = draw.id, pairing_id = pairing.id)
+        all_participants = list(Participant.objects.filter(in_draw=draw))
+        shuffle(all_participants)
 
-    not_drawn_participants_pks = draw.participants.filter(was_drawn=False).values_list("pk", flat=True)
-    participant_2 = Participant.objects.get(pk=choice(not_drawn_participants_pks))
+        recievers = _rotate_list(all_participants, 1)
 
-    pairing = Pairing(gifter=participant_1, giftee=participant_2, draw=draw)
-    pairing.save()
+        for i in range(len(all_participants)):
+            pairing = Pairing(gifter=all_participants[i], giftee=recievers[i], draw=draw)
+            pairing.save()
+            all_participants[i].to_gift = pairing
+            all_participants[i].save()
 
-    participant_1.to_gift = pairing
-    participant_1.has_drawn = True
-    participant_1.save()
+        return
 
-    participant_2.was_drawn = True
-    participant_2.save()
-    
-    return redirect("show_pairing", draw_id = draw.id, pairing_id = pairing.id)
+def _rotate_list(l, n):
+    return l[-n:] + l[:-n]
 
 def show_pairing(request, draw_id, pairing_id):
     draw = get_object_or_404(Draw, pk=draw_id)
