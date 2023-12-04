@@ -10,7 +10,7 @@
         <link href='{% static "css/style.css" %}' rel="stylesheet">
 
         <script>
-            var numberAdditionalLines = 1;
+            var numberAdditionalLines = {{ participants | length}};
             function addLine() {
                 // I'm so bad at vanilla JS
                 let line = document.createElement("div");
@@ -56,19 +56,28 @@
         <header>
             <h1>Edit draw</h1>
         </header>
+        {% if errors %}
+            <div class="p-3 text-danger-emphasis bg-danger-subtle border border-danger-subtle rounded-3 mt-1 mb-4">
+                {{ errors }}
+            </div>
+        {% endif %}
         <form method="post" action="/draw/{{draw_pk}}/edit" id="names-form">
             {% csrf_token %}
             <div class="mb-3" id="draw-name-form">
                 <label for="draw-label" class="form-label">How should we name this draw?</label>
                 <div class="dram-name">
-                    <input type="text" class="form-control" name="draw-name" required="required" value="{{draw_name}}">
+                    <input type="text" class="form-control" name="draw-name" required="required" value="{{ draw_name }}">
                 </div> 
+
             <div id="names-fields">
                 {% for participant in participants %}
-                <div class="mb-3">
+                <div class="mb-3" id="name-line-{{ forloop.counter0 }}">
                     <label for="name-0" class="form-label">Name</label>
                     <div class="name-field">
-                        <input type="text" class="form-control" name="names" required="required" value="{{participant.name}}">
+                        <input type="text" class="form-control" name="names" value="{{ participant.name }}">
+                        <button class="btn btn-outline-secondary border rounded-right" type="button" onClick="removeLine('name-line-{{ forloop.counter0 }}')">
+                            &times;
+                        </button>
                     </div> 
                 </div>
                 {% endfor %}
