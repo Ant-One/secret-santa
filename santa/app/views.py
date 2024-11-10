@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template import loader
+from django.template.defaultfilters import slugify
 from django.http import HttpResponse
 
 from .models import Draw, Participant, Pairing
@@ -21,11 +22,13 @@ def create_draw(request):
 
         if not draw_name or not names:
             return HttpResponse("HTTP 400 - Bad Request", status=400)
+        if len(set(names)) != len(names):
+            return HttpResponse("Yes", status = 400) #TODO better error
         draw = Draw(draw_name=draw_name)
         draw.save()
         for name in names:
             if name:
-                participant = Participant(name=name, in_draw=draw)
+                participant = Participant(name=name, name_slug=slugify(name), in_draw=draw)
                 participant.save()
 
     return redirect("draw_details", draw_id = draw.id)
@@ -71,6 +74,30 @@ def draw_edit(request, draw_id):
         return redirect("draw_details", draw_id = draw.id)
 
     return render(request, "draw_edit.html", context)
+
+def draw_exclusions(request, draw_id):
+    draw = get_object_or_404(Draw, pk=draw_id)
+    context = {
+        "draw_name": draw.draw_name,
+        "draw_pk": draw_id,
+        "participants": draw.participants.all(),
+    }
+
+    if request.method == "POST":
+        all_participants = list(Participant.objects.filter(in_draw=draw))
+
+        for participant in all_participants:
+            participant_exclusions = request.POST.getlist(f"exclusions-{participant.name_slug}")
+            participant.exclusions.clear()
+            for exclusion in participant_exclusions:
+                if exclusion:
+                    exclusion_person = Participant.objects.get(name_slug = exclusion)
+                    participant.exclusions.add(exclusion_person)
+            participant.save()
+
+        return redirect("draw_details", draw_id = draw.id)
+
+    return render(request, "draw_exclusions.html", context)
 
 def share_link(request, draw_id):
     draw = get_object_or_404(Draw, pk=draw_id)

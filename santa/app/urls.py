@@ -6,6 +6,7 @@ urlpatterns = [
     path("", views.index, name="index"),
     path("draw/new", views.new_draw, name="new_draw"),
     path("draw/create", views.create_draw, name="create_draw"),
+    path("draw/<int:draw_id>/exclusions", views.draw_exclusions, name="draw_exclusions"),
     path("draw/<int:draw_id>/", views.draw_details, name="draw_details"),
     path("draw/<int:draw_id>/edit", views.draw_edit, name="draw_edit"),
     path("draw/<int:draw_id>/do_draw", views.do_draw, name="do_draw"),

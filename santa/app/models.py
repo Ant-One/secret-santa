@@ -12,4 +12,6 @@ class Pairing(models.Model):
 class Participant(models.Model):
     in_draw = models.ForeignKey("Draw", on_delete=models.CASCADE, null=True, related_name="participants")
     name = models.TextField(blank=False)
+    name_slug = models.TextField(blank=False)
     to_gift = models.ForeignKey("Pairing",on_delete=models.SET_NULL, null=True)
+    exclusions = models.ManyToManyField("Participant")
