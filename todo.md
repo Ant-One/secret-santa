@@ -1,6 +1,6 @@
 # UI
 - X Draw name
-- footer in separate file
+- X footer in separate file
 - new footer
 - Count of participants
 - X delete in edit
