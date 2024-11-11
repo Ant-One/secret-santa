@@ -51,6 +51,9 @@ def create_draw(request):
 def draw_details(request, draw_id):
     draw = get_object_or_404(Draw, pk=draw_id)
 
+    if draw.is_drawn:
+        return redirect("do_draw", draw_id = draw.id)
+
     context = {
         "draw_name": draw.draw_name,
         "participants": draw.participants.order_by("name"),
