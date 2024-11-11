@@ -124,7 +124,7 @@ def draw_exclusions(request, draw_id):
             for exclusion in participant_exclusions:
                 if exclusion:
                     print(exclusion)
-                    exclusion_person = Participant.objects.get(name = exclusion)
+                    exclusion_person = Participant.objects.get(name = exclusion, in_draw=draw)
                     participant.exclusions.add(exclusion_person)
             participant.save()
 
