@@ -73,6 +73,8 @@ def draw_edit(request, draw_id):
         draw_name = request.POST.get("draw-name")
         names = request.POST.getlist("names")
 
+        error = None
+
         if draw.is_drawn:
             return HttpResponse("HTTP 403 - Forbidden, already drawn", status=403)
 
